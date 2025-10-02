@@ -5,7 +5,6 @@ on:
   push:
     branches: [ "main" ]
   
-
 jobs:
   compile:
     runs-on: self-hosted
@@ -57,7 +56,7 @@ jobs:
     - name: Unit Test cases
       run: mvn test
       
-   build_project_and_sonar_scan:
+    build_project_and_sonar_scan:
       runs-on: self-hosted
       needs: test
       steps:
@@ -68,26 +67,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-    - name: Build Project
-      run: mvn package 
+      - name: Build Project
+        run: mvn package 
 
-    - uses: actions/checkout@v4
-      with:
+      - uses: actions/checkout@v4
+        with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
         fetch-depth: 0
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6.0.0 # Ex: v4.1.0, or sha1, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6.0.0 # Ex: v4.1.0, or sha1, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
     # Check the Quality Gate status.
-    - name: SonarQube Quality Gate check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      with:
-          pollingTimeoutSec: 600
-      env:
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+            pollingTimeoutSec: 600
+        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} #OPTIONAL
 
